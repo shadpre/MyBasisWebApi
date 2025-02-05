@@ -8,7 +8,7 @@ To get started with MyBasisWebApi, follow the instructions below.
 
 ### Prerequisites
 
-- .NET 6.0 SDK or later
+- .NET 9.0 SDK or later
 - SQL Server
 - Visual Studio or Visual Studio Code
 
@@ -21,7 +21,7 @@ To get started with MyBasisWebApi, follow the instructions below.
     ```
 
 2. Set up the database:
-    - Update the connection string in `appsettings.json` to point to your SQL Server instance.
+    - Update the connection string in [appsettings.json](http://_vscodecontentref_/1) to point to your SQL Server instance.
     - Run the following command to apply migrations and create the database:
         ```bash
         dotnet ef database update
@@ -39,7 +39,7 @@ To get started with MyBasisWebApi, follow the instructions below.
 
 ## Usage
 
-Once the project is running, you can access the API at `https://localhost:7000 or http://localhost:7100` (or the port specified in your launch settings).
+Once the project is running, you can access the API at `https://localhost:7000` or `http://localhost:7100` (or the port specified in your launch settings).
 
 ## Project Structure
 
@@ -50,7 +50,7 @@ Once the project is running, you can access the API at `https://localhost:7000 o
 
 ## Configuration
 
-The project uses `appsettings.json` for configuration. Update the following settings as needed:
+The project uses [appsettings.json](http://_vscodecontentref_/2) for configuration. Update the following settings as needed:
 
 - **ConnectionStrings**: Update the `MyDbConnectionString` to point to your SQL Server instance.
 - **JwtSettings**: Configure the JWT settings for authentication.
@@ -63,9 +63,10 @@ The project uses `appsettings.json` for configuration. Update the following sett
 - **POST /api/Account/login**: Log in a user.
 - **POST /api/Account/refreshtoken**: Refresh the authentication token.
 
-### Other Endpoints
+### Roles
 
-Add other endpoints as needed for your application.
+- **POST /api/Roles/add-role**: Add a role to a user.
+- **POST /api/Roles/remove-role**: Remove a role from a user.
 
 ## Contributing
 
