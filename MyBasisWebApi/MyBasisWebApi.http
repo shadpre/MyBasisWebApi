@@ -1,0 +1,6 @@
+@MyBasisWebApi_HostAddress = https://localhost:7071
+
+GET {{MyBasisWebApi_HostAddress}}/api/test
+Accept: application/json
+
+###
