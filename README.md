@@ -21,7 +21,7 @@ To get started with MyBasisWebApi, follow the instructions below.
     ```
 
 2. Set up the database:
-    - Update the connection string in [appsettings.json] to point to your SQL Server instance.
+    - Update the connection string in appsettings.json to point to your SQL Server instance.
     - Run the following command to apply migrations and create the database:
         ```bash
         dotnet ef database update
@@ -50,7 +50,7 @@ Once the project is running, you can access the API at `https://localhost:7000` 
 
 ## Configuration
 
-The project uses [appsettings.json] for configuration. Update the following settings as needed:
+The project uses appsettings.json for configuration. Update the following settings as needed:
 
 - **ConnectionStrings**: Update the `MyDbConnectionString` to point to your SQL Server instance.
 - **JwtSettings**: Configure the JWT settings for authentication.
