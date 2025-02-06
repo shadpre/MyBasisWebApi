@@ -1,8 +1,8 @@
 ﻿using BLL.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Net;
+using Microsoft.AspNetCore.Http; 
+using Microsoft.Extensions.Logging; 
+using Newtonsoft.Json; 
+using System.Net; 
 
 namespace BLL.Middleware
 {
@@ -11,8 +11,8 @@ namespace BLL.Middleware
     /// </summary>
     public class ExceptionMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly RequestDelegate _next; // Delegate for the next middleware in the pipeline
+        private readonly ILogger<ExceptionMiddleware> _logger; // Logger instance for logging
 
         /// <summary>
         /// Initializes a new instance of the ExceptionMiddleware class.
@@ -21,8 +21,8 @@ namespace BLL.Middleware
         /// <param name="logger">The logger instance.</param>
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
-            this._next = next;
-            this._logger = logger;
+            _next = next; // Assign the next middleware delegate
+            _logger = logger; // Assign the logger instance
         }
 
         /// <summary>
@@ -34,12 +34,12 @@ namespace BLL.Middleware
         {
             try
             {
-                await _next(context);
+                await _next(context); // Call the next middleware in the pipeline
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Something went wrong while processing {context.Request.Path}");
-                await HandleExceptionAsync(context, ex);
+                _logger.LogError(ex, $"Something went wrong while processing {context.Request.Path}"); // Log the exception with error message and request path
+                await HandleExceptionAsync(context, ex); // Handle the exception and write the response
             }
         }
 
@@ -51,31 +51,31 @@ namespace BLL.Middleware
         /// <returns>A task that represents the asynchronous operation.</returns>
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            context.Response.ContentType = "application/json";
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json"; // Set response content type to JSON
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError; // Default status code is 500 Internal Server Error
             var errorDetails = new ErrorDetails
             {
-                ErrorType = "Failure",
-                ErrorMessage = ex.Message,
+                ErrorType = "Failure", // Default error type is "Failure"
+                ErrorMessage = ex.Message, // Set error message to exception message
             };
 
             switch (ex)
             {
                 case NotFoundException notFoundException:
-                    statusCode = HttpStatusCode.NotFound;
-                    errorDetails.ErrorType = "Not Found";
+                    statusCode = HttpStatusCode.NotFound; // Set status code to 404 Not Found for NotFoundException
+                    errorDetails.ErrorType = "Not Found"; // Set error type to "Not Found"
                     break;
                 case BadRequestException badRequestException:
-                    statusCode = HttpStatusCode.BadRequest;
-                    errorDetails.ErrorType = "Bad Request";
+                    statusCode = HttpStatusCode.BadRequest; // Set status code to 400 Bad Request for BadRequestException
+                    errorDetails.ErrorType = "Bad Request"; // Set error type to "Bad Request"
                     break;
                 default:
                     break;
             }
 
-            string response = JsonConvert.SerializeObject(errorDetails);
-            context.Response.StatusCode = (int)statusCode;
-            return context.Response.WriteAsync(response);
+            string response = JsonConvert.SerializeObject(errorDetails); // Serialize error details to JSON string
+            context.Response.StatusCode = (int)statusCode; // Set response status code
+            return context.Response.WriteAsync(response); // Write JSON response to HTTP context
         }
     }
 

@@ -1,14 +1,15 @@
+using AspNetCoreRateLimit;
 using BLL;
 using BLL.Interfaces;
 using BLL.Middleware;
-using BLL.Repos;
-using DAL;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.OData;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Serilog;
+using BLL.Repos; 
+using DAL; 
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.AspNetCore.Identity; 
+using Microsoft.AspNetCore.OData; 
+using Microsoft.EntityFrameworkCore; 
+using Microsoft.OpenApi.Models; 
+using Serilog; 
 
 namespace MyBasisWebApi
 {
@@ -23,35 +24,33 @@ namespace MyBasisWebApi
         /// <param name="args">The command-line arguments.</param>
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(args); // Create a new WebApplication builder
 
-            var connectionString = builder.Configuration.GetConnectionString("MyDbConnectionString");
+            var connectionString = builder.Configuration.GetConnectionString("MyDbConnectionString"); // Get the connection string from configuration
             builder.Services.AddDbContext<MyDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                options.UseSqlServer(connectionString); // Configure DbContext to use SQL Server with the connection string
             });
 
-            var provider = builder.Configuration.GetSection("JwtSettings:Issuer").Value;
+            var provider = builder.Configuration.GetSection("JwtSettings:Issuer").Value; // Get the JWT issuer from configuration
 
-            builder.Services.AddIdentityCore<ApiUser>()
-                .AddRoles<IdentityRole>()
-                .AddTokenProvider<DataProtectorTokenProvider<ApiUser>>(provider)
-                .AddEntityFrameworkStores<MyDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentityCore<ApiUser>() // Add ASP.NET Core Identity services with ApiUser as the user type
+                .AddRoles<IdentityRole>() // Add role support
+                .AddTokenProvider<DataProtectorTokenProvider<ApiUser>>(provider) // Add token provider with JWT issuer as provider
+                .AddEntityFrameworkStores<MyDbContext>() // Use MyDbContext for storing identity data
+                .AddDefaultTokenProviders(); // Add default token providers
 
-            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddEndpointsApiExplorer(); // Add API explorer for endpoint documentation
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Listing API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Listing API", Version = "v1" }); // Configure Swagger document with title and version
                 options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      Example: 'Bearer 12345abcdef'",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme
+                    Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below. Example: 'Bearer 12345abcdef'", // Description of JWT authorization header
+                    Name = "Authorization", // Name of the header parameter
+                    In = ParameterLocation.Header, // Location of the parameter (header)
+                    Type = SecuritySchemeType.ApiKey, // Type of security scheme (API key)
+                    Scheme = JwtBearerDefaults.AuthenticationScheme // Scheme name (JWT Bearer)
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -76,48 +75,55 @@ namespace MyBasisWebApi
                 options.AddPolicy("AllowAll",
                     b => b.AllowAnyHeader()
                         .AllowAnyOrigin()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()); // Configure CORS policy to allow any header, origin, and method
             });
 
-            builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
+            builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration)); // Configure Serilog for logging
 
-            builder.Services.AddAutoMapper(typeof(MapperConfig));
+            builder.Services.AddAutoMapper(typeof(MapperConfig)); // Add AutoMapper services with MapperConfig
 
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IAuthManager, AuthManager>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); // Add scoped service for generic repository
+            builder.Services.AddScoped<IAuthManager, AuthManager>(); // Add scoped service for authentication manager
 
-            builder.Services.AddAuthentication().AddJwtBearer();
+            builder.Services.AddAuthentication().AddJwtBearer(); // Add authentication services with JWT Bearer scheme
 
             builder.Services.AddResponseCaching(options =>
             {
-                options.MaximumBodySize = 1024;
-                options.UseCaseSensitivePaths = true;
+                options.MaximumBodySize = 1024; // Set maximum body size for response caching
+                options.UseCaseSensitivePaths = true; // Enable case-sensitive paths for response caching
             });
+
+            // Add IP rate limiting services
+            builder.Services.AddOptions(); // Add options services
+            builder.Services.AddMemoryCache(); // Add memory cache services
+            builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimitOptions")); // Configure IP rate limit options from configuration
+            builder.Services.AddInMemoryRateLimiting(); // Add in-memory rate limiting services
+            builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>(); // Add singleton service for rate limit configuration
 
             builder.Services.AddControllers().AddOData(options =>
             {
-                options.Select().Filter().OrderBy();
+                options.Select().Filter().OrderBy(); // Enable OData support with select, filter, and order by options
             });
 
-            var app = builder.Build();
+            var app = builder.Build(); // Build the application
 
             if (app.Environment.IsDevelopment())
             {
-
+                // Development-specific configuration can be added here if needed
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwagger(); // Enable Swagger middleware for generating Swagger JSON endpoint and UI
+            app.UseSwaggerUI(); // Enable Swagger UI middleware
 
-            app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging(); // Enable Serilog request logging middleware
 
-            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>(); // Use custom exception handling middleware
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection(); // Enable HTTPS redirection middleware
 
-            app.UseCors("AllowAll");
+            app.UseCors("AllowAll"); // Enable CORS middleware with "AllowAll" policy
 
-            app.UseResponseCaching();
+            app.UseResponseCaching(); // Enable response caching middleware
 
             app.Use(async (context, next) =>
             {
@@ -125,20 +131,22 @@ namespace MyBasisWebApi
                     new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
                     {
                         Public = true,
-                        MaxAge = TimeSpan.FromSeconds(10)
+                        MaxAge = TimeSpan.FromSeconds(10) // Set cache control headers with max age of 10 seconds
                     };
                 context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
-                    new string[] { "Accept-Encoding" };
+                    new string[] { "Accept-Encoding" }; // Set vary header to "Accept-Encoding"
 
-                await next();
+                await next(); // Call the next middleware in the pipeline
             });
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthentication(); // Enable authentication middleware
+            app.UseAuthorization(); // Enable authorization middleware
 
-            app.MapControllers();
+            app.UseIpRateLimiting(); // Use IP rate limiting middleware
 
-            app.Run();
+            app.MapControllers(); // Map controller routes
+
+            app.Run(); // Run the application
         }
     }
 }
