@@ -1,25 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace MyBasisWebApi.Logic.Models.Users;
 
-namespace BLL.DTO.Users
-{
-    /// <summary>
-    /// Data Transfer Object for API User.
-    /// Inherits from LoginDto.
-    /// </summary>
-    public class ApiUserDto : LoginDto
-    {
-        /// <summary>
-        /// Gets or sets the first name of the user.
-        /// This field is required.
-        /// </summary>
-        [Required]
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the last name of the user.
-        /// This field is required.
-        /// </summary>
-        [Required]
-        public string LastName { get; set; }
-    }
-}
+/// <summary>
+/// Data transfer object for API user registration.
+/// </summary>
+/// <param name="FirstName">The user's first name.</param>
+/// <param name="LastName">The user's last name.</param>
+/// <param name="Email">The user's email address (also used for login).</param>
+/// <param name="Password">The user's chosen password.</param>
+/// <remarks>
+/// Design decision: Use sealed record for immutability and value equality.
+/// Validation is handled by <see cref="ApiUserDtoValidator"/> using FluentValidation.
+/// All properties are required for user registration to ensure complete user profiles.
+/// </remarks>
+public sealed record ApiUserDto(
+    string FirstName,
+    string LastName,
+    string Email,
+    string Password);

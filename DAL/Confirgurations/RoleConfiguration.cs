@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DAL.Configurations
+namespace MyBasisWebApi.DataAccess.Configurations
 {
     /// <summary>
     /// Configuration for IdentityRole entities.

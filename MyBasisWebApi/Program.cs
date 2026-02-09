@@ -1,9 +1,9 @@
 using AspNetCoreRateLimit;
-using BLL;
-using BLL.Interfaces;
-using BLL.Middleware;
-using BLL.Repos; 
-using DAL; 
+using MyBasisWebApi.Logic;
+using MyBasisWebApi.Logic.Interfaces;
+using MyBasisWebApi.Logic.Middleware;
+using MyBasisWebApi.Logic.Services.Authentication;
+using MyBasisWebApi.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer; 
 using Microsoft.AspNetCore.Identity; 
 using Microsoft.AspNetCore.OData; 
@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models; 
 using Serilog; 
 
-namespace MyBasisWebApi
+namespace MyBasisWebApi.Presentation
 {
     /// <summary>
     /// The main entry point for the application.
@@ -71,18 +71,48 @@ namespace MyBasisWebApi
                 });
             });
 
-            builder.Services.AddCors(options => {
-                options.AddPolicy("AllowAll",
-                    b => b.AllowAnyHeader()
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()); // Configure CORS policy to allow any header, origin, and method
+            // ==================== CORS Configuration ====================
+            /// <summary>
+            /// Configures CORS (Cross-Origin Resource Sharing) policy.
+            /// </summary>
+            /// <remarks>
+            /// SECURITY FIX: Uses explicit allowed origins from configuration instead of AllowAnyOrigin.
+            /// AllowAnyOrigin is a security vulnerability that allows malicious websites to call the API.
+            /// 
+            /// Allowed origins should be configured in appsettings.json:
+            /// {
+            ///   "AllowedOrigins": ["https://localhost:5001", "https://yourdomain.com"]
+            /// }
+            /// 
+            /// AllowCredentials is required for sending cookies and authentication tokens.
+            /// Update AllowedOrigins in appsettings.json for each environment.
+            /// </remarks>
+            var allowedOrigins = builder.Configuration
+                .GetSection("AllowedOrigins")
+                .Get<string[]>() 
+                ?? new[] { "https://localhost:5001" }; // Safe default for development
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                    policy.WithOrigins(allowedOrigins)  // ? Explicit origins only (SECURITY FIX)
+                          .AllowAnyMethod()              // Allow GET, POST, PUT, DELETE, etc.
+                          .AllowAnyHeader()              // Allow custom headers (Authorization, etc.)
+                          .AllowCredentials());          // Allow cookies and auth tokens
             });
 
             builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration)); // Configure Serilog for logging
 
             builder.Services.AddAutoMapper(typeof(MapperConfig)); // Add AutoMapper services with MapperConfig
 
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); // Add scoped service for generic repository
+            // ==================== Application Services ====================
+            /// <summary>
+            /// Registers application services for dependency injection.
+            /// </summary>
+            /// <remarks>
+            /// REFACTORED: Removed generic repository anti-pattern (violates coding standards).
+            /// Services should use DbContext directly or aggregate-specific repositories.
+            /// </remarks>
             builder.Services.AddScoped<IAuthManager, AuthManager>(); // Add scoped service for authentication manager
 
             builder.Services.AddAuthentication().AddJwtBearer(); // Add authentication services with JWT Bearer scheme

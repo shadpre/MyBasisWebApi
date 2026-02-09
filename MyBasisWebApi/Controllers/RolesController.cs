@@ -1,8 +1,8 @@
-﻿using DAL;
+﻿using MyBasisWebApi.DataAccess;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyBasisWebApi.Controllers
+namespace MyBasisWebApi.Presentation.Controllers
 {
     /// <summary>
     /// Controller for managing user roles.

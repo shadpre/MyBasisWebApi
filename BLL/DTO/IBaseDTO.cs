@@ -1,4 +1,4 @@
-﻿namespace BLL.Models
+﻿namespace MyBasisWebApi.Logic.Models
 {
     /// <summary>
     /// Interface for Base Data Transfer Object.

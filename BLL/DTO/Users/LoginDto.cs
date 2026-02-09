@@ -1,26 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace MyBasisWebApi.Logic.Models.Users;
 
-namespace BLL.DTO.Users
-{
-    /// <summary>
-    /// Data Transfer Object for Login.
-    /// </summary>
-    public class LoginDto
-    {
-        /// <summary>
-        /// Gets or sets the email address.
-        /// This field is required and must be a valid email address.
-        /// </summary>
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Gets or sets the password.
-        /// This field is required and must be between 6 and 15 characters.
-        /// </summary>
-        [Required]
-        [StringLength(15, ErrorMessage = "Your Password is limited to {2} to {1} characters", MinimumLength = 6)]
-        public string Password { get; set; }
-    }
-}
+/// <summary>
+/// Data transfer object for user login requests.
+/// </summary>
+/// <param name="Email">The user's email address used for authentication.</param>
+/// <param name="Password">The user's password.</param>
+/// <remarks>
+/// Design decision: Use sealed record for immutability and value equality.
+/// Validation is handled by <see cref="LoginDtoValidator"/> using FluentValidation.
+/// </remarks>
+public sealed record LoginDto(
+    string Email,
+    string Password);

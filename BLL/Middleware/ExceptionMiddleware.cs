@@ -1,10 +1,10 @@
-﻿using BLL.Exceptions;
+﻿using MyBasisWebApi.Logic.Exceptions;
 using Microsoft.AspNetCore.Http; 
 using Microsoft.Extensions.Logging; 
 using Newtonsoft.Json; 
 using System.Net; 
 
-namespace BLL.Middleware
+namespace MyBasisWebApi.Logic.Middleware
 {
     /// <summary>
     /// Middleware for handling exceptions in the application.

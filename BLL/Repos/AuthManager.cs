@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using BLL.DTO.Users;
-using BLL.Interfaces;
-using DAL;
+using MyBasisWebApi.Logic.Models.Users;
+using MyBasisWebApi.Logic.Interfaces;
+using MyBasisWebApi.DataAccess;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging; 
@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims; 
 using System.Text; 
 
-namespace BLL.Repos
+namespace MyBasisWebApi.Logic.Services.Authentication
 {
     /// <summary>
     /// Manages authentication operations.
@@ -73,12 +73,12 @@ namespace BLL.Repos
             var token = await GenerateToken(); // Generate JWT token
             _logger.LogInformation($"Token generated for user with email {loginDto.Email} | Token: {token}"); // Log information about token generation
 
-            return new AuthResponseDto
-            {
-                Token = token, // Set generated token in response DTO
-                UserId = _user.Id, // Set user ID in response DTO
-                RefreshToken = await CreateRefreshToken() // Set new refresh token in response DTO
-            };
+            // Use record constructor syntax (required for records with positional parameters)
+            return new AuthResponseDto(
+                UserId: _user.Id,
+                Token: token,
+                RefreshToken: await CreateRefreshToken()
+            );
         }
 
         /// <summary>
@@ -123,12 +123,13 @@ namespace BLL.Repos
             if (isValidRefreshToken) // If refresh token is valid
             {
                 var token = await GenerateToken(); // Generate new JWT token
-                return new AuthResponseDto
-                {
-                    Token = token, // Set generated token in response DTO
-                    UserId = _user.Id, // Set user ID in response DTO
-                    RefreshToken = await CreateRefreshToken() // Set new refresh token in response DTO
-                };
+                
+                // Use record constructor syntax (required for records with positional parameters)
+                return new AuthResponseDto(
+                    UserId: _user.Id,
+                    Token: token,
+                    RefreshToken: await CreateRefreshToken()
+                );
             }
 
             await _userManager.UpdateSecurityStampAsync(_user); // Update security stamp for user

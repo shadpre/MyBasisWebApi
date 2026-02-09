@@ -1,4 +1,4 @@
-﻿namespace BLL.Models
+﻿namespace MyBasisWebApi.Logic.Models
 {
     /// <summary>
     /// Represents a paged result set.

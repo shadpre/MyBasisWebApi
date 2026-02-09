@@ -1,7 +1,7 @@
-﻿using BLL.DTO.Users;
+﻿using MyBasisWebApi.Logic.Models.Users;
 using Microsoft.AspNetCore.Identity;
 
-namespace BLL.Interfaces
+namespace MyBasisWebApi.Logic.Interfaces
 {
     /// <summary>
     /// Interface for Authentication Manager.

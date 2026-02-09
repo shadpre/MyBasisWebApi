@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using BLL.DTO.Users;
-using DAL;
+using MyBasisWebApi.Logic.Models.Users;
+using MyBasisWebApi.DataAccess;
 
-namespace BLL
+namespace MyBasisWebApi.Logic
 {
     /// <summary>
     /// Configuration for AutoMapper profiles.

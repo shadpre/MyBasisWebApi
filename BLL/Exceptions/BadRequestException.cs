@@ -1,4 +1,4 @@
-﻿namespace BLL.Exceptions
+﻿namespace MyBasisWebApi.Logic.Exceptions
 {
     /// <summary>
     /// Represents an exception for bad requests.

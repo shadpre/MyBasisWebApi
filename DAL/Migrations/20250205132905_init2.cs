@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DAL.Migrations
+namespace MyBasisWebApi.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class init2 : Migration

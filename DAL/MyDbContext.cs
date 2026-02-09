@@ -1,10 +1,10 @@
-﻿using DAL.Configurations;
+﻿using MyBasisWebApi.DataAccess.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace DAL
+namespace MyBasisWebApi.DataAccess
 {
     /// <summary>
     /// Database context for the application.
