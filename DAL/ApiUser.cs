@@ -15,8 +15,10 @@ namespace MyBasisWebApi.DataAccess
     /// - UserName is always set to Email (enforced in RegisterCommandHandler)
     /// - All new users are assigned "User" role by default
     /// 
-    /// TODO: This entity should be moved to MyBasisWebApi_Logic\Entities\Users\ after refactoring.
-    /// Current location in DAL violates layer separation (domain entities belong in Logic layer).
+    /// Architecture decision: Kept in DataAccess layer despite general rule of domain entities in Logic layer.
+    /// Rationale: ApiUser is an infrastructure entity tightly coupled with EF Core Identity framework.
+    /// Moving to Logic layer would create circular dependency and violate Identity architecture patterns.
+    /// Identity entities (IdentityUser, IdentityRole) are infrastructure concerns, not pure domain entities.
     /// </remarks>
     public sealed class ApiUser : IdentityUser
     {
