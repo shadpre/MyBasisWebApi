@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "mybasiswebapi-projekt",
+  "version": "0.1.0",
+  "description": "Projektgrundlag, beslutninger og kildebaseret støtte til modernisering af MyBasisWebApi som fælles .NET API-skabelon.",
+  "author": { "name": "Klavs Tranborg Eriksen" },
+  "repository": "https://github.com/shadpre/MyBasisWebApi",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "MyBasisWebApi Projekt",
+        "shortDescription": "Fælles .NET API-skabelon",
+        "longDescription": "Holder projektets krav, beslutninger, verificerede kilder og næste afgrænsede opgave samlet. Hjælper med sikker modernisering, dokumentation og Copilot-overdragelse. Projektpluginet er arbejdsstøtte; det driver ikke en API-server eller automatiske baggrundsjob.",
+        "developerName": "Klavs Tranborg Eriksen",
+        "category": "Developer Tools",
+        "capabilities": [],
+        "defaultPrompt": "Fortsæt MyBasisWebApi fra den verificerede projektstatus og næste afgrænsede opgave."
+      }
+    }
+  }
+}
