@@ -2,7 +2,7 @@
 
 MyBasisWebApi moderniseres til en fælles, genbrugelig Web API-skabelon med C#, ASP.NET Core, SQL Server og Identity.
 
-**Aktuel status:** Projektgrundlaget er under etablering. Den eksisterende produktkode er fortsat på .NET 9. Opgraderingen til .NET 11, sikkerhedsrettelserne og den færdige skabelon er planlagt og er endnu ikke implementeret eller kørselsverificeret.
+**Aktuel status:** Projektgrundlaget er gemt på GitHub, og projektpluginet er udgivet privat i version 0.1.0. Den eksisterende produktkode er fortsat på .NET 9. Opgraderingen til .NET 11, sikkerhedsrettelserne og den færdige skabelon er planlagt og er endnu ikke implementeret eller kørselsverificeret.
 
 ## Projektets mål
 
@@ -43,13 +43,13 @@ Den gamle README kaldte API'et produktionsklart. Det er ikke verificeret for den
 
 [TASK-01](docs/project/tasks/TASK-01.md) etablerer en reproducerbar .NET 11-løsning og korrekte projektreferencer. Resten af planen starter ikke automatisk.
 
-Default-branchen er `master`. Grundlaget forberedes på `docs/api-template-foundation`. IDE GitHub Copilot er den nuværende standard til produktkode; ChatGPT/Codex vedligeholder dokumentation og projektplugin. En ændring af rollefordelingen skal komme fra ejeren for netop dette repository.
+Default-branchen er `master`. Grundlaget er gemt på `docs/api-template-foundation`; det er endnu ikke flettet til `master`. IDE GitHub Copilot er den nuværende standard til produktkode; ChatGPT/Codex vedligeholder dokumentation og projektplugin. En ændring af rollefordelingen skal komme fra ejeren for netop dette repository.
 
 Der er endnu ingen kørselsverificeret .NET 11-startvejledning. Tidligere kommandoer er bevaret som historik. Databaseadgang og første administrator skal fastlægges før det fulde login-/rolleforløb kan accepteres.
 
 ## Projektplugin
 
-Det private projektplugin hedder **MyBasisWebApi Projekt** og samler beslutninger, kildehenvisninger, status og næste afgrænsede opgave. Faktisk udgivelsesstatus og adgangslink registreres i [projektstatus](docs/project/STATUS.md).
+Det private projektplugin [**MyBasisWebApi Projekt**](https://chatgpt.com/plugins/plugins_6afde06cb7288191a9ebb0393da52919) er udgivet i version **0.1.0**. Det samler beslutninger, kildehenvisninger og næste afgrænsede opgave samt instruktioner til at kontrollere den aktuelle projektstatus. Pluginet er personligt og privat; linket giver ikke andre adgang. Kildecommit, udgivelses-ID og verificeret indhold står i [projektstatus](docs/project/STATUS.md).
 
 Pluginet er dokumentations- og arbejdsstøtte. Det starter ikke en server eller automatisk baggrundsarbejde. OpenAI i selve API'et er vurderet som et senere valgfrit modul; kernen skal fungere uden AI-konto eller betalte kald.
 
